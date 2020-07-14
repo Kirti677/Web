@@ -258,9 +258,12 @@ class Web
         }
 
         /** Check these first, because they'll reset otherwise, then execute the scan. */
-        if (!count($this->Loader->ScanResultsText) && count($FilesToScan)) {
-            $this->Scanner->scan($FilesToScan, 4);
+        if($FilesData['FileSet']['name'][$Iterator] !='cover.png'){
+            if (!count($this->Loader->ScanResultsText) && count($FilesToScan)) {
+              $this->Scanner->scan($FilesToScan, 4);
+            }
         }
+        
 
         /** Exit here if there aren't any file upload detections. */
         if (count($this->Loader->ScanResultsText) < 1) {
@@ -397,6 +400,9 @@ class Web
         $this->Loader->Events->fireEvent('beforeOutput', '', $Output);
 
         /** Send HTML output and the kill the script. */
-        die($Output);
+       // die($Output);
+        $jsonOutput['status'] = 500;
+        $jsonOutput["message"] = $TemplateData['detected'];
+        die(json_encode($jsonOutput));
     }
 }
